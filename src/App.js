@@ -1,65 +1,110 @@
 import React from 'react';
-import axios from 'axios';
+import moment from 'moment';
 
 class App extends React.Component {
   state = {
-    appName: 'App Cities',
-    mode: 1,
-    cities: [
-      {id: 1, name: 'aceh'},
-      {id: 2, name: 'jabar'},
-      {id: 3, name: 'jateng'},
+    appName: 'App Student',
+    showForm: false,
+    form: {name: '', address: '', birthDate: '1999-12-31'},
+    students: [
+      {name: 'windu', address: 'cilacap', birthDate: new Date()},
+      {name: 'wito', address: 'tangerang', birthDate: new Date()},
     ],
   };
 
-  componentDidMount() {
-    console.log('comp did mount');
-    axios.get('https://api.etanee.id/provinsi').then(r => {
-      this.setState({cities: r.data});
-    });
-  }
-  
-  x = () => this.state.cities.map(c => {
-    return <li key={c.id}>{`${c.id} - ${c.name}`}</li>;
-  });
-
-  y = () => <ul>{this.x()}</ul>;
-
-  a = () => this.state.cities.map(c => {
-    return (
-      <tr key={c.id}>
-        <td>{c.id}</td>
-        <td>{c.name}</td>
-      </tr>
-    );
-  });
-
-  b = () => (
-    <table border="1">
-      <tbody>
-        <tr>
-          <th>ID</th>
-          <th>Nama</th>
+  rows = () =>
+    this.state.students.map((s, i) => {
+      return (
+        <tr key={i}>
+          <td>{s.name}</td>
+          <td>{s.address}</td>
+          <td>{moment(s.birthDate).format('DD MMMM YYYY')}</td>
+          <td>
+            <button onClick={() => this.deleteClick(i)}>delete</button>
+          </td>
         </tr>
-        {this.a()}
-      </tbody>
-    </table>
-  );
+      );
+    });
 
-  handleClick = n => {
-    console.log('handle click');
-    this.setState({mode: n});
+  tables = () => {
+    return (
+      <table border="1">
+        <tbody>
+          <tr>
+            <th>Nama</th>
+            <th>Alamat</th>
+            <th>Tgl Lahir</th>
+          </tr>
+          {this.rows()}
+        </tbody>
+      </table>
+    );
+  };
+
+  inputData = () => {
+    this.setState({showForm: true});
+  };
+
+  submit = e => {
+    e.preventDefault();
+    const o = {
+      showForm: false,
+      students: [...this.state.students, this.state.form],
+      form: {name: '', address: '', birthDate: null},
+    };
+    this.setState(o);
+  };
+
+  deleteClick = index => {
+    const x = window.confirm('Apakah anda yakin akan menghapus data siswa?');
+    if (!x) return;
+    const f = [...this.state.students];
+    f.splice(index, 1);
+    this.setState({students: f});
+  };
+
+  onChange = e => {
+    const f = this.state.form;
+    f[e.target.name] = e.target.value;
+    this.setState(f);
+    console.log(this.state.form);
   };
 
   render() {
-    console.log('render');
     return (
-      <div>
-        <h1>{this.state.appName}</h1>
-        <button onClick={e => this.handleClick(1)}>List</button>
-        <button onClick={e => this.handleClick(2)}>Table</button>
-        {this.state.mode === 1 ? this.y() : this.b()}
-      </div>
+      <React.Fragment>
+        <button onClick={() => this.inputData()}>Tambah Siswa</button>
+        {this.tables()}
+        <hr />
+        {this.state.showForm && (
+          <form onSubmit={e => this.submit(e)}>
+            <input
+              type="text"
+              name="name"
+              onChange={e => this.onChange(e)}
+              value={this.state.form.name}
+              placeholder="nama"
+            />
+            <br />
+            <input
+              type="text"
+              name="address"
+              onChange={e => this.onChange(e)}
+              value={this.state.form.address}
+              placeholder="alamat"
+            />
+            <br />
+            <input
+              type="date"
+              name="birthDate"
+              onChange={e => this.onChange(e)}
+              value={this.state.form.birthDate}
+            />
+            <br />
+            <input type="submit" value="simpan" />
+          </form>
+        )}
+      </React.Fragment>
     );
   }
 }
