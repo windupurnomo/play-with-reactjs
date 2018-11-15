@@ -1,19 +1,19 @@
 import React from 'react';
-import axios from 'axios';
 import Judul from './judul';
 import Kal from './Kalkulator';
 import List from './books';
 import Table from './Table';
 import Ul from './UnorderList';
+import TD from './TD';
 
 class App extends React.Component {
   state = {
     appName: 'App Cities',
     mode: 2,
     kabupatens: [
-      {id: 1, name: 'bogor', provinsi: 'jabar'},
-      {id: 2, name: 'cianjur', provinsi: 'jabar'},
-      {id: 3, name: 'ciamis', provinsi: 'jabar'},
+      {id: 1, name: 'bogor', provinsi: 'jabar', umr: 1800000},
+      {id: 2, name: 'cianjur', provinsi: 'jabar', umr: 1200000},
+      {id: 3, name: 'ciamis', provinsi: 'jabar', umr: 1100000},
     ],
     cities: [
       {id: 1, name: 'jabar'},
@@ -29,6 +29,28 @@ class App extends React.Component {
   render() {
     return (
       <div>
+
+        <table border="1">
+          <tbody>
+            <tr>
+              <th>xxxxxxxxx</th>
+              <th>xxxxxxxxx</th>
+              <th>xxxxxxxxx</th>
+              <th>xxxxxxxxx</th>
+              <th>xxxxxxxxx</th>
+              <th>xxxxxxxxx</th>
+            </tr>
+            <tr>
+              <TD type="rupiah" value={300} />
+              <TD type="dollar" value={400} />
+              <TD value={600} />
+              <TD value={"Hello World"} />
+              <TD type="date" value={new Date()} />
+              <TD type="number" value={500000} />
+            </tr>
+          </tbody>
+        </table>
+
         <Judul nama="Aplikasi Canggih" warna="red" />
         <Judul nama="Lalala" warna="green" />
         <Judul nama="ReactJS " warna="yellow" />
