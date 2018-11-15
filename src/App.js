@@ -3,79 +3,24 @@ import axios from 'axios';
 import Judul from './judul';
 import Kal from './Kalkulator';
 import List from './books';
+import Table from './Table';
+import Ul from './UnorderList';
 
 class App extends React.Component {
   state = {
     appName: 'App Cities',
     mode: 2,
-    kabupatens: [],
+    kabupatens: [
+      {id: 1, name: 'bogor', provinsi: 'jabar'},
+      {id: 2, name: 'cianjur', provinsi: 'jabar'},
+      {id: 3, name: 'ciamis', provinsi: 'jabar'},
+    ],
     cities: [
-      {id: 1, name: 'aceh'},
-      {id: 2, name: 'jabar'},
-      {id: 3, name: 'jateng'},
+      {id: 1, name: 'jabar'},
+      {id: 2, name: 'jateng'},
+      {id: 3, name: 'jatim'},
     ],
   };
-
-  componentDidMount() {
-    axios.get('https://api.etanee.id/provinsi').then(r => {
-      this.setState({cities: r.data});
-    });
-  }
-
-  showKota = (provinsiId) => {
-    axios.get(`https://api.etanee.id/kabupaten/provinsi/${provinsiId}`).then(r => {
-      this.setState({kabupatens: r.data});
-    });
-  }
-  
-  x = () => this.state.cities.map(c => {
-    return <li key={c.id}>{`${c.id} - ${c.name}`}</li>;
-  });
-
-  y = () => <ul>{this.x()}</ul>;
-
-
-  a = () => this.state.cities.map(c => {
-    return (
-      <tr key={c.id}>
-        <td>{c.id}</td>
-        <td>{c.name}</td>
-        <td><button onClick={() => this.showKota(c.id)}>Kab/Kota</button></td>
-      </tr>
-    );
-  });
-
-  b = () => (
-    <table border="1">
-      <tbody>
-        <tr>
-          <th>ID</th>
-          <th>Nama</th>
-        </tr>
-        {this.a()}
-      </tbody>
-    </table>
-  );
-  a1 = () => this.state.kabupatens.map(c => {
-    return (
-      <tr key={c.id}>
-        <td>{c.id}</td>
-        <td>{c.name}</td>
-      </tr>
-    );
-  });
-
-  b1 = () => (
-    <table border="1">
-      <tbody>
-        <tr>
-          <th>ID</th>
-          <th>Nama</th>
-        </tr>
-        {this.a1()}
-      </tbody>
-    </table>
-  );
 
   handleClick = n => {
     this.setState({mode: n});
@@ -94,11 +39,23 @@ class App extends React.Component {
         <button onClick={e => this.handleClick(2)}>Table</button>
         <table>
           <tbody>
-          <tr>
-            <td>{this.state.mode === 1 ? this.y() : this.b()}</td>
-            <td>{this.b1()}</td>
-          </tr>
-        </tbody>
+            <tr>
+              <th>Provinsi</th>
+              <th>Kota</th>
+            </tr>
+            <tr>
+              <td>
+                {this.state.mode === 1 ? (
+                  <Ul />
+                ) : (
+                  <Table data={this.state.cities} type="provinsi" />
+                )}
+              </td>
+              <td>
+                <Table data={this.state.kabupatens} type="kabupaten" />
+              </td>
+            </tr>
+          </tbody>
         </table>
       </div>
     );
